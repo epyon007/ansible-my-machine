@@ -35,7 +35,7 @@
     - cowsay
     - htop
     - ansible
-    - python-pip
+    - python-pip-whl
     - python3-pip
     - terminator
     - docker-ce
