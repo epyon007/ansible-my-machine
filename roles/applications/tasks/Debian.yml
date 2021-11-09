@@ -23,9 +23,7 @@
 
 - name: Install a list of packages
   apt:
-    name: "{{ packages }}"
-  vars:
-    packages:
+    name:
     - apt-transport-https
     - ca-certificates
     - software-properties-common
