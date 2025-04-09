@@ -46,6 +46,7 @@
     - kubectl
     - gnupg
     - curl
+    - fzf
     # - virtualbox-ext-pack
     # - postman
     # - goland
