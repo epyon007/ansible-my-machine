@@ -1,25 +1,45 @@
 ---
-- name: add key
-  apt_key:
+- name: Adding Repo keys
+  ansible.builtin.apt_key:
     url: "{{ item }}"
     state: present
   loop:
-    # - https://download.docker.com/linux/ubuntu/gpg
-    # - https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
-    - https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    # - https://www.virtualbox.org/download/oracle_vbox_2016.asc
+      - https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key
+      - https://download.docker.com/linux/ubuntu/gpg
+      - https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg
+      - https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
-- name: add repository
-  apt_repository:
+- name: Add Jenkins apt repository.
+  ansible.builtin.apt_repository:
     repo: "{{ item }}"
     state: present
   loop:
-    - "ppa:ansible/ansible"
-    #- "ppa:gnome-terminator"
-    # - "deb https://download.docker.com/linux/ubuntu jammy stable"
-    # - "deb http://repository.spotify.com stable non-free"
-    - "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
-    # - "deb https://download.virtualbox.org/virtualbox/debian focal contrib"
+      - "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/"
+      - "deb https://download.docker.com/linux/ubuntu jammy stable"
+      - "deb http://repository.spotify.com stable non-free"
+      - "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
+
+#- name: add key
+#  apt_key:
+#    url: "{{ item }}"
+#    state: present
+#  loop:
+#    - https://download.docker.com/linux/ubuntu/gpg
+#    - https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
+#    - https://packages.cloud.google.com/apt/doc/apt-key.gpg
+#    - https://www.virtualbox.org/download/oracle_vbox_2016.asc
+
+#- name: add repository
+#  apt_repository:
+#    repo: "{{ item }}"
+#    state: present
+#  loop:
+#    - "ppa:ansible/ansible"
+#    #- "ppa:gnome-terminator"
+#    # - "deb https://download.docker.com/linux/ubuntu jammy stable"
+#    # - "deb http://repository.spotify.com stable non-free"
+#    - "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
+#    # - "deb https://download.virtualbox.org/virtualbox/debian focal contrib"
 
 - name: update apt cache
   apt:
