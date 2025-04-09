@@ -1,15 +1,15 @@
 ---
 - name: Adding Repo keys.
   ansible.builtin.get_url:
-    url: "{{ item }}"
+    url: "{{ item.url }}"
     mode: '0644'
     dest: "{{ item.dest }}"
     force: true
   loop:
-      - { url: 'https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key', dest: '/etc/apt/trusted.gpg.d/'}
-      - { url: 'https://download.docker.com/linux/ubuntu/gpg', dest: '/etc/apt/trusted.gpg.d/' }
-      - { url: 'https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg', dest: '/etc/apt/trusted.gpg.d/' }
-      - { url: 'https://packages.cloud.google.com/apt/doc/apt-key.gpg', dest: '/etc/apt/trusted.gpg.d/' }
+      - { url: 'https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key', dest: '/etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg' }
+      - { url: 'https://download.docker.com/linux/ubuntu/gpg', dest: '/etc/apt/trusted.gpg.d/docker-archive-keyring.gpg' }
+      - { url: 'https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg', dest: '/etc/apt/trusted.gpg.d/spotify-archive-keyring.gpg' }
+      - { url: 'https://packages.cloud.google.com/apt/doc/apt-key.gpg', dest: '/etc/apt/trusted.gpg.d/google-cloud-sdk-keyring.gpg' }
 
 # - name: Adding Repo keys
 #  ansible.builtin.apt_key:
