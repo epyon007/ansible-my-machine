@@ -5,9 +5,9 @@
     state: present
   loop:
     - https://download.docker.com/linux/ubuntu/gpg
-    - https://packagecloud.io/AtomEditor/atom/gpgkey
     - https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
-    - https://www.virtualbox.org/download/oracle_vbox_2016.asc
+    - https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    # - https://www.virtualbox.org/download/oracle_vbox_2016.asc
 
 - name: add repository
   apt_repository:
@@ -16,10 +16,10 @@
   loop:
     - "ppa:ansible/ansible"
     #- "ppa:gnome-terminator"
-    - "deb https://download.docker.com/linux/ubuntu xenial stable"
-    - "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
+    - "deb https://download.docker.com/linux/ubuntu jammy stable"
     - "deb http://repository.spotify.com stable non-free"
-    - "deb https://download.virtualbox.org/virtualbox/debian focal contrib"
+    - "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
+    # - "deb https://download.virtualbox.org/virtualbox/debian focal contrib"
 
 - name: update apt cache
   apt:
@@ -31,19 +31,21 @@
     - apt-transport-https
     - ca-certificates
     - software-properties-common
-    - atom
     - python
     - python3
-    - cowsay
-    - htop
+    - btop
     - ansible
     - python-pip-whl
     - python3-pip
     - terminator
     - docker-ce
-    - virtualbox
-    - hollywood
-    - figlet
+    # - virtualbox
+    # - hollywood
+    # - figlet
+    - gcloud
+    - kubectl
+    - gnupg
+    - curl
     # - virtualbox-ext-pack
     # - postman
     # - goland
@@ -54,24 +56,24 @@
     url: "{{ item.url }}"
     dest: "{{ item.dest }}"
   loop:
-    - { url: 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', dest: '/opt/' }
-    - { url: 'https://github.com/meetfranz/franz/releases/download/v5.1.0/franz_5.1.0_amd64.deb', dest: '/opt/' }
-    - { url: 'https://downloads.slack-edge.com/releases/linux/4.31.155/prod/x64/slack-desktop-4.31.155-amd64.deb', dest: '/opt/' }
-    - { url: 'https://cdn.devolutions.net/download/Linux/RDM/2023.1.0.6/RemoteDesktopManager_2023.1.0.6_amd64.deb', dest: '/opt' }
+    # - { url: 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', dest: '/opt/' }
+    # - { url: 'https://github.com/meetfranz/franz/releases/download/v5.1.0/franz_5.1.0_amd64.deb', dest: '/opt/' }
+    #- { url: 'https://downloads.slack-edge.com/releases/linux/4.31.155/prod/x64/slack-desktop-4.31.155-amd64.deb', dest: '/opt/' }
+    # - { url: 'https://cdn.devolutions.net/download/Linux/RDM/2023.1.0.6/RemoteDesktopManager_2023.1.0.6_amd64.deb', dest: '/opt' }
     - { url: 'https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.deb', dest: '/opt' }
-    - { url: 'https://github.com/ksnip/ksnip/releases/download/v1.10.1/ksnip-1.10.1.deb', dest: '/opt'}
+    # - { url: 'https://github.com/ksnip/ksnip/releases/download/v1.10.1/ksnip-1.10.1.deb', dest: '/opt'}
 
 
 - name: Install a .deb package
   apt:
     deb: /opt/{{ item }}
   loop:
-    - google-chrome-stable_current_amd64.deb
-    - franz_5.1.0_amd64.deb
-    - slack-desktop-4.31.155-amd64.deb
-    - RemoteDesktopManager_2023.1.0.6_amd64.deb
+    # - google-chrome-stable_current_amd64.deb
+    # - franz_5.1.0_amd64.deb
+    # - slack-desktop-4.31.155-amd64.deb
+    # - RemoteDesktopManager_2023.1.0.6_amd64.deb
     - vagrant_2.2.9_x86_64.deb
-    - ksnip-1.10.1.deb
+    # - ksnip-1.10.1.deb
 
 - name: install pip modules
   pip:
