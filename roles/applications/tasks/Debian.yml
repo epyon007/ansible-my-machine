@@ -3,6 +3,7 @@
   ansible.builtin.get_url:
     url: "{{ item }}"
     mode: '0644'
+    dest: "{{ item.dest }}"
     force: true
   loop:
       - { url: 'https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key', dest: '/etc/apt/trusted.gpg.d/k8s.gpg'}
