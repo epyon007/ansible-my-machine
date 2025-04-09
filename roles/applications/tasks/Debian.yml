@@ -43,11 +43,11 @@
 #    # - "deb https://download.virtualbox.org/virtualbox/debian focal contrib"
 
 - name: update apt cache
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
 
 - name: Install a list of packages
-  apt:
+  ansible.builtin.apt:
     name:
     - apt-transport-https
     - ca-certificates
