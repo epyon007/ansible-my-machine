@@ -1,13 +1,25 @@
 ---
-- name: Adding Repo keys
-  ansible.builtin.apt_key:
+- name: Adding Repo keys.
+  ansible.builtin.get_url:
     url: "{{ item }}"
-    state: present
+    mode: '0644'
+    force: true
   loop:
-      - https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key
-      - https://download.docker.com/linux/ubuntu/gpg
-      - https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg
-      - https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      - { url: 'https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key', dest: '/etc/apt/trusted.gpg.d/k8s.gpg'}
+      - { url: 'https://download.docker.com/linux/ubuntu/gpg', dest: '/etc/apt/trusted.gpg.d/docker.gpg' }
+      - { url: 'https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg', dest: '/etc/apt/trusted.gpg.d/spotify.gpg' }
+      - { url: 'https://packages.cloud.google.com/apt/doc/apt-key.gpg', dest: '/etc/apt/trusted.gpg.d/cloud.google.gpg' }
+
+# - name: Adding Repo keys
+#  ansible.builtin.apt_key:
+#    url: "{{ item }}"
+#    state: present
+#    dest: /etc/apt/trusted.gpg.d/
+#  loop:
+#      - https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key
+#      - https://download.docker.com/linux/ubuntu/gpg
+#      - https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg
+#      - https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
 - name: Adding Repo URLs
   ansible.builtin.apt_repository:
@@ -17,7 +29,7 @@
       - "deb https://apt.kubernetes.io/ kubernetes-jammy main"
       - "deb https://download.docker.com/linux/ubuntu jammy stable"
       - "deb http://repository.spotify.com stable non-free"
-      - "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
+      - "deb https://packages.cloud.google.com/apt cloud-sdk main"
 
 #- name: add key
 #  apt_key:
