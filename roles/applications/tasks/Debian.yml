@@ -26,10 +26,10 @@
     repo: "{{ item }}"
     state: present
   loop:
-      - "deb https://apt.kubernetes.io/ kubernetes-jammy main"
-      - "deb https://download.docker.com/linux/ubuntu jammy stable"
-      - "deb http://repository.spotify.com stable non-free"
-      - "deb https://packages.cloud.google.com/apt cloud-sdk main"
+      - "deb [signed-by=/etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+      - "deb [signed-by=/etc/apt/trusted.gpg.d/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu jammy stable"
+      - "deb [signed-by=/etc/apt/trusted.gpg.d/spotify-archive-keyring.gpg] http://repository.spotify.com stable non-free"
+      - "deb [signed-by=/etc/apt/trusted.gpg.d/google-cloud-sdk-keyring.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
 
 #- name: add key
 #  apt_key:
