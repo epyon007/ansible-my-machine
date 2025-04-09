@@ -4,7 +4,7 @@
     url: "{{ item }}"
     state: present
   loop:
-    - https://download.docker.com/linux/ubuntu/gpg
+    # - https://download.docker.com/linux/ubuntu/gpg
     - https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
     - https://packages.cloud.google.com/apt/doc/apt-key.gpg
     # - https://www.virtualbox.org/download/oracle_vbox_2016.asc
@@ -61,7 +61,7 @@
     # - { url: 'https://github.com/meetfranz/franz/releases/download/v5.1.0/franz_5.1.0_amd64.deb', dest: '/opt/' }
     #- { url: 'https://downloads.slack-edge.com/releases/linux/4.31.155/prod/x64/slack-desktop-4.31.155-amd64.deb', dest: '/opt/' }
     # - { url: 'https://cdn.devolutions.net/download/Linux/RDM/2023.1.0.6/RemoteDesktopManager_2023.1.0.6_amd64.deb', dest: '/opt' }
-    - { url: 'https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.deb', dest: '/opt' }
+    # - { url: 'https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.deb', dest: '/opt' }
     # - { url: 'https://github.com/ksnip/ksnip/releases/download/v1.10.1/ksnip-1.10.1.deb', dest: '/opt'}
 
 
@@ -73,7 +73,7 @@
     # - franz_5.1.0_amd64.deb
     # - slack-desktop-4.31.155-amd64.deb
     # - RemoteDesktopManager_2023.1.0.6_amd64.deb
-    - vagrant_2.2.9_x86_64.deb
+    # - vagrant_2.2.9_x86_64.deb
     # - ksnip-1.10.1.deb
 
 - name: install pip modules
