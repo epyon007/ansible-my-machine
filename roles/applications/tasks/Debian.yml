@@ -6,16 +6,15 @@
     dest: "{{ item.dest }}"
     force: true
   loop:
-      - "{ url: 'https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key', dest: '/etc/apt/trusted.gpg.d/k8s.gpg'}"
-      - "{ url: 'https://download.docker.com/linux/ubuntu/gpg', dest: '/etc/apt/trusted.gpg.d/docker.gpg' }"
-      - "{ url: 'https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg', dest: '/etc/apt/trusted.gpg.d/spotify.gpg' }"
-      - "{ url: 'https://packages.cloud.google.com/apt/doc/apt-key.gpg', dest: '/etc/apt/trusted.gpg.d/cloud.google.gpg' }"
+      - { url: 'https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key', dest: '/etc/apt/trusted.gpg.d/'}
+      - { url: 'https://download.docker.com/linux/ubuntu/gpg', dest: '/etc/apt/trusted.gpg.d/' }
+      - { url: 'https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg', dest: '/etc/apt/trusted.gpg.d/' }
+      - { url: 'https://packages.cloud.google.com/apt/doc/apt-key.gpg', dest: '/etc/apt/trusted.gpg.d/' }
 
 # - name: Adding Repo keys
 #  ansible.builtin.apt_key:
 #    url: "{{ item }}"
 #    state: present
-#    dest: /etc/apt/trusted.gpg.d/
 #  loop:
 #      - https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key
 #      - https://download.docker.com/linux/ubuntu/gpg
