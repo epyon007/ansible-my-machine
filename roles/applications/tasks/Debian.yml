@@ -5,7 +5,7 @@
     state: present
   loop:
     # - https://download.docker.com/linux/ubuntu/gpg
-    - https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
+    # - https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
     - https://packages.cloud.google.com/apt/doc/apt-key.gpg
     # - https://www.virtualbox.org/download/oracle_vbox_2016.asc
 
@@ -16,8 +16,8 @@
   loop:
     - "ppa:ansible/ansible"
     #- "ppa:gnome-terminator"
-    - "deb https://download.docker.com/linux/ubuntu jammy stable"
-    - "deb http://repository.spotify.com stable non-free"
+    # - "deb https://download.docker.com/linux/ubuntu jammy stable"
+    # - "deb http://repository.spotify.com stable non-free"
     - "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
     # - "deb https://download.virtualbox.org/virtualbox/debian focal contrib"
 
@@ -38,7 +38,7 @@
     - python-pip-whl
     - python3-pip
     - terminator
-    - docker-ce
+    # - docker-ce
     # - virtualbox
     # - hollywood
     # - figlet
