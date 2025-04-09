@@ -14,7 +14,7 @@
     repo: "{{ item }}"
     state: present
   loop:
-      - "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/"
+      - "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb"
       - "deb https://download.docker.com/linux/ubuntu jammy stable"
       - "deb http://repository.spotify.com stable non-free"
       - "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
