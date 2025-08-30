@@ -67,7 +67,7 @@
     - python3
     - btop
     - ansible
-    - python-pip-whl
+    #- python-pip-whl
     - python3-pip
     - terminator
     # - docker-ce
