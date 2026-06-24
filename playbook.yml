@@ -1,8 +1,6 @@
-- name: Install Docker-Volume-Netshare
+- name: Platform Engineer Workstation Setup
   hosts: localhost
   gather_facts: true
   become: yes
   roles:
     - applications
-    # - atom
-    # - cowsay

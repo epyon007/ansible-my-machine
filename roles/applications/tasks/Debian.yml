@@ -1,118 +1,356 @@
 ---
-- name: Adding Repo keys.
+# =============================================================================
+# Platform Engineer Workstation Setup — Ubuntu/Debian
+# Target: Ubuntu 24.04 LTS (Noble)
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# 1. APT Repository Keys
+# ---------------------------------------------------------------------------
+- name: Adding APT repository keys
   ansible.builtin.get_url:
     url: "{{ item.url }}"
-    mode: '0644'
+    mode: "0644"
     dest: "{{ item.dest }}"
     force: true
   loop:
-      - { url: 'https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key', dest: '/etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg' }
-      - { url: 'https://download.docker.com/linux/ubuntu/gpg', dest: '/etc/apt/trusted.gpg.d/docker-archive-keyring.gpg' }
-      - { url: 'https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg', dest: '/etc/apt/trusted.gpg.d/spotify-archive-keyring.gpg' }
-      - { url: 'https://packages.cloud.google.com/apt/doc/apt-key.gpg', dest: '/etc/apt/trusted.gpg.d/google-cloud-sdk-keyring.gpg' }
+    - {
+        url: "https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key",
+        dest: "/etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg",
+      }
+    - {
+        url: "https://download.docker.com/linux/ubuntu/gpg",
+        dest: "/etc/apt/trusted.gpg.d/docker-archive-keyring.gpg",
+      }
+    - {
+        url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg",
+        dest: "/etc/apt/trusted.gpg.d/google-cloud-sdk-keyring.gpg",
+      }
+    - {
+        url: "https://baltocdn.com/helm/signing.asc",
+        dest: "/etc/apt/trusted.gpg.d/helm-keyring.gpg",
+      }
+    - {
+        url: "https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg",
+        dest: "/etc/apt/trusted.gpg.d/spotify-archive-keyring.gpg",
+      }
 
-# - name: Adding Repo keys
-#  ansible.builtin.apt_key:
-#    url: "{{ item }}"
-#    state: present
-#  loop:
-#      - https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key
-#      - https://download.docker.com/linux/ubuntu/gpg
-#      - https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg
-#      - https://packages.cloud.google.com/apt/doc/apt-key.gpg
-
-- name: Adding Repo URLs
+# ---------------------------------------------------------------------------
+# 2. APT Repositories
+# ---------------------------------------------------------------------------
+- name: Adding APT repository URLs
   ansible.builtin.apt_repository:
     repo: "{{ item }}"
     state: present
   loop:
-      - "deb [signed-by=/etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
-      - "deb [signed-by=/etc/apt/trusted.gpg.d/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu jammy stable"
-      - "deb [signed-by=/etc/apt/trusted.gpg.d/spotify-archive-keyring.gpg] http://repository.spotify.com stable non-free"
-      - "deb [signed-by=/etc/apt/trusted.gpg.d/google-cloud-sdk-keyring.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
+    - "deb [signed-by=/etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /"
+    - "deb [signed-by=/etc/apt/trusted.gpg.d/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu noble stable"
+    - "deb [signed-by=/etc/apt/trusted.gpg.d/google-cloud-sdk-keyring.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
+    - "deb [signed-by=/etc/apt/trusted.gpg.d/helm-keyring.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+    - "deb [signed-by=/etc/apt/trusted.gpg.d/spotify-archive-keyring.gpg] http://repository.spotify.com stable non-free"
 
-#- name: add key
-#  apt_key:
-#    url: "{{ item }}"
-#    state: present
-#  loop:
-#    - https://download.docker.com/linux/ubuntu/gpg
-#    - https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
-#    - https://packages.cloud.google.com/apt/doc/apt-key.gpg
-#    - https://www.virtualbox.org/download/oracle_vbox_2016.asc
-
-#- name: add repository
-#  apt_repository:
-#    repo: "{{ item }}"
-#    state: present
-#  loop:
-#    - "ppa:ansible/ansible"
-#    #- "ppa:gnome-terminator"
-#    # - "deb https://download.docker.com/linux/ubuntu jammy stable"
-#    # - "deb http://repository.spotify.com stable non-free"
-#    - "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main"
-#    # - "deb https://download.virtualbox.org/virtualbox/debian focal contrib"
-
-- name: update apt cache
+- name: Update APT cache
   ansible.builtin.apt:
     update_cache: yes
 
-- name: Install a list of packages
+# ---------------------------------------------------------------------------
+# 3. APT Packages
+# ---------------------------------------------------------------------------
+- name: Install base system packages
   ansible.builtin.apt:
     name:
-    - apt-transport-https
-    - ca-certificates
-    - software-properties-common
-    - python
-    - python3
-    - btop
-    - ansible
-    #- python-pip-whl
-    - python3-pip
-    - terminator
-    # - docker-ce
-    # - virtualbox
-    # - hollywood
-    # - figlet
-    - gcloud
-    - kubectl
-    - gnupg
-    - curl
-    - fzf
-    # - virtualbox-ext-pack
-    # - postman
-    # - goland
-    # - sublime
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+      - gnupg
+      - curl
+      - wget
+      - git
+      - unzip
+      - zip
+      - make
+      - build-essential
+    state: present
 
-- name: Download DEB packages
-  get_url:
-    url: "{{ item.url }}"
-    dest: "{{ item.dest }}"
+- name: Install Python ecosystem
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+      - python3-venv
+    state: present
+
+- name: Install Kubernetes & Cloud tools (APT)
+  ansible.builtin.apt:
+    name:
+      - kubectl
+      - google-cloud-cli
+      - helm
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+
+- name: Install terminal & shell tools
+  ansible.builtin.apt:
+    name:
+      - zsh
+      - fzf
+      - jq
+      - btop
+      - htop
+      - tree
+      - tmux
+      - terminator
+      - nmap
+      - shellcheck
+    state: present
+
+- name: Install Ansible
+  ansible.builtin.apt:
+    name:
+      - ansible
+    state: present
+
+# ---------------------------------------------------------------------------
+# 4. Snap Packages
+# ---------------------------------------------------------------------------
+- name: Install snap packages (classic confinement)
+  community.general.snap:
+    name: "{{ item }}"
+    classic: true
   loop:
-    # - { url: 'https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb', dest: '/opt/' }
-    # - { url: 'https://github.com/meetfranz/franz/releases/download/v5.1.0/franz_5.1.0_amd64.deb', dest: '/opt/' }
-    #-  { url: 'https://downloads.slack-edge.com/releases/linux/4.31.155/prod/x64/slack-desktop-4.31.155-amd64.deb', dest: '/opt/' }
-    # - { url: 'https://cdn.devolutions.net/download/Linux/RDM/2023.1.0.6/RemoteDesktopManager_2023.1.0.6_amd64.deb', dest: '/opt' }
-    # - { url: 'https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.deb', dest: '/opt' }
-    # - { url: 'https://github.com/ksnip/ksnip/releases/download/v1.10.1/ksnip-1.10.1.deb', dest: '/opt'}
+    - code
+    - go
+    - aws-cli
+    - slack
 
-
-- name: Install a .deb package
-  apt:
-    deb: /opt/{{ item }}
-  loop:
-    # - google-chrome-stable_current_amd64.deb
-    # - franz_5.1.0_amd64.deb
-    # - slack-desktop-4.31.155-amd64.deb
-    # - RemoteDesktopManager_2023.1.0.6_amd64.deb
-    # - vagrant_2.2.9_x86_64.deb
-    # - ksnip-1.10.1.deb
-
-- name: install pip modules
-  pip:
+- name: Install snap packages (strict confinement)
+  community.general.snap:
     name: "{{ item }}"
   loop:
-    - docker
-    - boto
-    - boto3
-    - botocore
+    - spotify
+    - yq
+    - kustomize
+    - terraform-docs
+
+# ---------------------------------------------------------------------------
+# 5. Binary Downloads — Kubernetes & Cloud Native
+# ---------------------------------------------------------------------------
+- name: Create temp download directory
+  ansible.builtin.file:
+    path: /tmp/platform-tools
+    state: directory
+    mode: "0755"
+
+- name: Download kubectx and kubens
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/ahmetb/kubectx/master/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: "0755"
+  loop:
+    - kubectx
+    - kubens
+
+- name: Download Helm diff plugin install script
+  ansible.builtin.shell: |
+    helm plugin install https://github.com/databus23/helm-diff || true
+  become: false
+  changed_when: false
+
+- name: Download ArgoCD CLI
+  ansible.builtin.get_url:
+    url: "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64"
+    dest: /usr/local/bin/argocd
+    mode: "0755"
+
+- name: Download istioctl
+  ansible.builtin.shell: |
+    curl -sL https://istio.io/downloadIstio | ISTIO_VERSION=1.24.0 sh -
+    cp istio-1.24.0/bin/istioctl /usr/local/bin/istioctl
+    rm -rf istio-1.24.0
+  args:
+    chdir: /tmp/platform-tools
+    creates: /usr/local/bin/istioctl
+
+- name: Download stern (log tailing for K8s)
+  ansible.builtin.get_url:
+    url: "https://github.com/stern/stern/releases/latest/download/stern_linux_amd64.tar.gz"
+    dest: /tmp/platform-tools/stern.tar.gz
+  register: stern_download
+
+- name: Extract stern
+  ansible.builtin.shell: |
+    tar -xzf /tmp/platform-tools/stern.tar.gz -C /tmp/platform-tools/
+    cp /tmp/platform-tools/stern /usr/local/bin/stern
+    chmod +x /usr/local/bin/stern
+  when: stern_download.changed
+  args:
+    creates: /usr/local/bin/stern
+
+- name: Download Velero CLI
+  ansible.builtin.get_url:
+    url: "https://github.com/vmware-tanzu/velero/releases/latest/download/velero-v1.15.0-linux-amd64.tar.gz"
+    dest: /tmp/platform-tools/velero.tar.gz
+  register: velero_download
+
+- name: Extract Velero
+  ansible.builtin.shell: |
+    tar -xzf /tmp/platform-tools/velero.tar.gz -C /tmp/platform-tools/
+    cp /tmp/platform-tools/velero-v1.15.0-linux-amd64/velero /usr/local/bin/velero
+    chmod +x /usr/local/bin/velero
+  when: velero_download.changed
+  args:
+    creates: /usr/local/bin/velero
+
+- name: Download crane (container registry tool)
+  ansible.builtin.get_url:
+    url: "https://github.com/google/go-containerregistry/releases/latest/download/go-containerregistry_Linux_x86_64.tar.gz"
+    dest: /tmp/platform-tools/crane.tar.gz
+  register: crane_download
+
+- name: Extract crane
+  ansible.builtin.shell: |
+    tar -xzf /tmp/platform-tools/crane.tar.gz -C /tmp/platform-tools/
+    cp /tmp/platform-tools/crane /usr/local/bin/crane
+    chmod +x /usr/local/bin/crane
+  when: crane_download.changed
+  args:
+    creates: /usr/local/bin/crane
+
+- name: Download kind (Kubernetes in Docker)
+  ansible.builtin.get_url:
+    url: "https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64"
+    dest: /usr/local/bin/kind
+    mode: "0755"
+
+# ---------------------------------------------------------------------------
+# 6. Binary Downloads — IaC & DevOps
+# ---------------------------------------------------------------------------
+- name: Download Terragrunt
+  ansible.builtin.get_url:
+    url: "https://github.com/gruntwork-io/terragrunt/releases/latest/download/terragrunt_linux_amd64"
+    dest: /usr/local/bin/terragrunt
+    mode: "0755"
+
+# ---------------------------------------------------------------------------
+# 7. Binary Downloads — Developer Productivity
+# ---------------------------------------------------------------------------
+- name: Download lazygit
+  ansible.builtin.shell: |
+    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+    curl -Lo /tmp/platform-tools/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+    tar -xzf /tmp/platform-tools/lazygit.tar.gz -C /tmp/platform-tools/
+    cp /tmp/platform-tools/lazygit /usr/local/bin/lazygit
+    chmod +x /usr/local/bin/lazygit
+  args:
+    creates: /usr/local/bin/lazygit
+
+- name: Download bat (cat replacement with syntax highlighting)
+  ansible.builtin.apt:
+    name: bat
+    state: present
+
+- name: Download delta (git diff viewer)
+  ansible.builtin.shell: |
+    DELTA_VERSION=$(curl -s "https://api.github.com/repos/dandavison/delta/releases/latest" | grep -Po '"tag_name": "\K[^"]*')
+    curl -Lo /tmp/platform-tools/delta.deb "https://github.com/dandavison/delta/releases/latest/download/git-delta_${DELTA_VERSION}_amd64.deb"
+    dpkg -i /tmp/platform-tools/delta.deb
+  args:
+    creates: /usr/bin/delta
+
+- name: Download shfmt (shell formatter)
+  ansible.builtin.get_url:
+    url: "https://github.com/mvdan/sh/releases/latest/download/shfmt_v3.10.0_linux_amd64"
+    dest: /usr/local/bin/shfmt
+    mode: "0755"
+
+# ---------------------------------------------------------------------------
+# 8. asdf Version Manager
+# ---------------------------------------------------------------------------
+- name: Install asdf version manager
+  ansible.builtin.git:
+    repo: https://github.com/asdf-vm/asdf.git
+    dest: "{{ ansible_env.HOME }}/.asdf"
+    version: v0.14.0
+  become: false
+
+- name: Install asdf plugins
+  ansible.builtin.shell: |
+    source {{ ansible_env.HOME }}/.asdf/asdf.sh
+    asdf plugin add {{ item }} || true
+  args:
+    executable: /bin/bash
+  loop:
+    - terraform
+    - terragrunt
+    - lefthook
+  become: false
+  changed_when: false
+
+# ---------------------------------------------------------------------------
+# 9. Oh My Zsh + Plugins
+# ---------------------------------------------------------------------------
+- name: Check if Oh My Zsh is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.oh-my-zsh"
+  register: omz_dir
+  become: false
+
+- name: Install Oh My Zsh
+  ansible.builtin.shell: |
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  when: not omz_dir.stat.exists
+  become: false
+
+- name: Install zsh-autosuggestions plugin
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions.git
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+  become: false
+
+- name: Install zsh-syntax-highlighting plugin
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+  become: false
+
+- name: Install zsh-history-substring-search plugin
+  ansible.builtin.git:
+    repo: https://github.com/zsh-users/zsh-history-substring-search.git
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/zsh-history-substring-search"
+  become: false
+
+- name: Install kube-ps1 plugin
+  ansible.builtin.git:
+    repo: https://github.com/jonmosco/kube-ps1.git
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins/kube-ps1"
+  become: false
+
+# ---------------------------------------------------------------------------
+# 10. Docker post-install (add user to docker group)
+# ---------------------------------------------------------------------------
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_env.USER }}"
+    groups: docker
+    append: yes
+
+# ---------------------------------------------------------------------------
+# 11. pip modules
+# ---------------------------------------------------------------------------
+- name: Install pip modules
+  ansible.builtin.pip:
+    name:
+      - docker
+      - boto3
+      - botocore
+    executable: pip3
+
+# ---------------------------------------------------------------------------
+# 12. Cleanup
+# ---------------------------------------------------------------------------
+- name: Remove temp download directory
+  ansible.builtin.file:
+    path: /tmp/platform-tools
+    state: absent
